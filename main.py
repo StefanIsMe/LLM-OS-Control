@@ -1,9 +1,9 @@
-# main.py - Updated to include only GUI-related code using PyAutoGUI and Gemini API for OCR functionality
+# main.py - Updated to include a toggle for the floating window feature
 
 # Import the required modules
 from utils.agent import create_clevrr_agent
 from utils.prompt import prompt
-from utils.constants import GEMINI, BG_COLOR, TEXT_COLOR, FONT, FONT_BOLD, BG_GRAY
+from utils.contants import GEMINI, BG_COLOR, TEXT_COLOR, FONT, FONT_BOLD, BG_GRAY
 
 import time
 import pyautogui as pg
@@ -20,12 +20,7 @@ def main():
     Main function to initialize the application with GUI settings.
     The application provides a graphical interface for interacting with an automated agent (Clevrr).
     """
-
-    # Print out the configurations for better debugging
-    print("Using model: GEMINI")
-    print("Float UI is enabled")
-    print("GUI is enabled")
-
+    
     # Create the Clevrr agent using the provided model and prompt
     try:
         global agent_executor  # Declare agent_executor as a global variable for use in other functions
@@ -55,6 +50,11 @@ def main():
 
     txt = tk.Text(root, bg=BG_COLOR, fg=TEXT_COLOR, font=FONT, width=40, height=30)
     txt.grid(row=1, column=0, columnspan=2)
+
+    # Toggle floating state
+    def toggle_float():
+        is_topmost = root.attributes('-topmost')
+        root.attributes('-topmost', not is_topmost)
 
     def send():
         """
@@ -88,8 +88,11 @@ def main():
     # Define the send button, linked to the send function
     tk.Button(root, text="Send", font=FONT_BOLD, bg=BG_GRAY, command=send).grid(row=2, column=1)
 
-    # Set window attributes and start the main loop
-    root.attributes('-topmost', True)
+    # Add a floating toggle button
+    toggle_button = tk.Button(root, text="Toggle Float", font=FONT_BOLD, bg=BG_GRAY, command=toggle_float)
+    toggle_button.grid(row=3, column=0, columnspan=2, pady=5)
+
+    # Start the main loop without setting always-on-top by default
     root.mainloop()
 
 if __name__ == "__main__":
